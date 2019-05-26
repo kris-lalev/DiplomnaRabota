@@ -11,17 +11,31 @@
 ###########
 
 import time
-import ps_drone                # Imports the PS-Drone-API
+import ps_drone         # Imports the PS-Drone-API
+import struct
 
-#drone = ps_drone.Drone()       # Initializes the PS-Drone-API
-#drone.startup()   # Connects to the drone and starts subprocesses
-#drone.setSpeed(0.5)     #Set default moving speed to 50%
+dest = open("./Files/Angle.bin", "rb")
+data = dest.read()
+dest.close()
+format = "f"
+angle, = struct.unpack(format, data) # note the ',' in 'value,': unpack  returns a n-uple
+print(angle)
 
-#drone.takeoff()                # Drone starts
-#time.sleep(7.5)                # Gives the drone time to start
+drone = ps_drone.Drone()       # Initializes the PS-Drone-API
+drone.startup()   # Connects to the drone and starts subprocesses
+#drone.setSpeed(0.7)     #Set default moving speed to 50%
+
+drone.takeoff()                # Drone starts
+time.sleep(8)                # Gives the drone time to start
 filed = open("./Files/Direction.txt","r")
 direction = filed.read()
 print(direction)
-#drone.moveForward()
+if direction == "right":
+    angle = angle - 2*angle
+    drone.turnAngle(angle)
+if direction == "left":
+    drone.turnAngle(angle)
+time.sleep(8)
+drone.moveForward()
 
-#drone.land()                   # Drone lands
+drone.land()                   # Drone lands
