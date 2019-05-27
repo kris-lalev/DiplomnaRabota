@@ -83,6 +83,10 @@ def main():
                         f.close()
                         isRunning = False			
                         print("stop recording")
+                        #write turn direction in file
+                        f = open("./Files/Direction.txt", "a")
+                        f.write("stop")
+                        f.close()
 	
 	#shutdown
         elif NearDest():
