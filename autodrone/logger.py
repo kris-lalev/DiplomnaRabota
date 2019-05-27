@@ -16,18 +16,21 @@ ser = serial.Serial('/dev/serial0',9600, timeout=1)
 sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser, 1), encoding='ascii', newline='\r')
 first = True
 #readdestination
-dest = open("./Files/Destination_lon.bin", "rb")
-data = dest.read()
-dest.close()
+LatB = input("Destination latitute:")
+LonB = input("Destination longitude:")
+lonB = float(LonB)
+latB = float(LatB)
+#write destination in file
+dest0 = open("./Files/Destination_lat.bin","wb")
+dest1 = open("./Files/Destination_lon.bin","wb")
 format = "f"
-lonB, = struct.unpack(format, data) # note the ',' in 'value,': unpack  returns a n-uple
-print(lonB)
+data0 = struct.pack(format, LatB)
+data1 = struct.pack(format, LonB)
+dest0.write(data0)
+dest1.write(data1)
+dest0.close()
+dest1.close()
 
-dest = open("./Files/Destination_lat.bin", "rb")
-data = dest.read()
-dest.close()
-latB, = struct.unpack(format, data)
-print(latB)
 datastring = sio.readline()
 isRunning = True
 global currLat

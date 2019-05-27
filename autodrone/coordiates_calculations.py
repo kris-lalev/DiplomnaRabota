@@ -2,12 +2,33 @@
 from math import pi, atan2, radians, cos, sin, asin, sqrt
 import struct
 
-LatA = 49.8587 #current
-LonA = 17.8522
-LatB_In = input("Destination latitute:") #destination
-LonB_In = input("Destination longitute:")
-LatB = float(LatB_In)
-LonB = float(LonB_In)
+#readdestination
+dest = open("./Files/Destination_lon.bin", "rb")
+data = dest.read()
+dest.close()
+format = "f"
+LonB, = struct.unpack(format, data) # note the ',' in 'value,': unpack  returns a n-uple
+print(LonB)
+
+dest = open("./Files/Destination_lat.bin", "rb")
+data = dest.read()
+dest.close()
+LatB, = struct.unpack(format, data)
+print(LatB)#readdestination
+
+dest = open("./Files/Start_lon.bin", "rb")
+data = dest.read()
+dest.close()
+format = "f"
+LonA, = struct.unpack(format, data) # note the ',' in 'value,': unpack  returns a n-uple
+print(LonA)
+
+dest = open("./Files/Start_lat.bin", "rb")
+data = dest.read()
+dest.close()
+LatA, = struct.unpack(format, data)
+print(LatA)
+
 LatC = 90 #Nort pole ; in need of a triangle
 LonC = 0
 sideAB = 0
@@ -95,15 +116,6 @@ def main():
     #out.write(turnHor.encode('ascii'))
     out.close()   
     #write destination in file
-    dest0 = open("./Files/Destination_lat.bin","wb")
-    dest1 = open("./Files/Destination_lon.bin","wb")
-    format = "f"
-    data0 = struct.pack(format, LatB)
-    data1 = struct.pack(format, LonB)
-    dest0.write(data0)
-    dest1.write(data1)
-    dest0.close()
-    dest1.close()
     #write turn direction in file
     f = open("./Files/Direction.txt", "a")
     f.write(turnHor)
