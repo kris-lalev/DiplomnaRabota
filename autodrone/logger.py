@@ -60,22 +60,36 @@ def main():
                     comp = "$GPRM"
                     if datastring[1:6] == comp :
                         msg = pynmea2.parse(datastring)
+                        print("ONE")
                         print(datastring)
                         print(msg.longitude)
                         print(msg.latitude)
                         currLat = msg.latitude
                         currLon = msg.longitude
-                    if first:
-                        dest0 = open("./Files/Start_lat.bin","wb")
-                        dest1 = open("./Files/Start_lon.bin","wb")
-                        format = "f"
-                        data0 = struct.pack(format, currLat)
-                        data1 = struct.pack(format, currLon)
-                        dest0.write(data0)
-                        dest1.write(data1)
-                        dest0.close()
-                        dest1.close()
-                        first = False
+                        print("TWO")
+                        print(currLat)
+                        print(currLon)
+                        if first:
+                            dest0 = open("./Files/Start_lat.bin","wb")
+                            dest1 = open("./Files/Start_lon.bin","wb")
+                            dest0.close ()
+                            dest1.close ()
+                            dest0 = open("./Files/Start_lat.bin","wb")
+                            dest1 = open("./Files/Start_lon.bin","wb")
+                            format = "f"
+                            print("THREE")
+                            print(currLat)
+                            print(currLon)
+                            data0 = struct.pack(format, currLat)
+                            data1 = struct.pack(format, currLon)
+                            dest0.write(data0)
+                            dest1.write(data1)
+                            dest0.close()
+                            dest1.close()
+                            first = False
+                    print("FOUR")
+                    print(currLat)
+                    print(currLon)
                     f.write(datastring + '\n')
                     f.flush()
 

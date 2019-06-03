@@ -1,5 +1,5 @@
 
-from math import pi, atan2, radians, cos, sin, asin, sqrt
+from math import pi, atan2, radians, cos, sin, asin, sqrt, degrees, acos
 import struct
 
 #readdestination
@@ -8,28 +8,30 @@ data = dest.read()
 dest.close()
 format = "f"
 LonB, = struct.unpack(format, data) # note the ',' in 'value,': unpack  returns a n-uple
-print(LonB)
 
 dest = open("./Files/Destination_lat.bin", "rb")
 data = dest.read()
 dest.close()
 LatB, = struct.unpack(format, data)
-print(LatB)#readdestination
 
 dest = open("./Files/Start_lon.bin", "rb")
 data = dest.read()
 dest.close()
 format = "f"
 LonA, = struct.unpack(format, data) # note the ',' in 'value,': unpack  returns a n-uple
-print(LonA)
 
 dest = open("./Files/Start_lat.bin", "rb")
 data = dest.read()
 dest.close()
 LatA, = struct.unpack(format, data)
-print(LatA)
 
-LatC = 90 #Nort pole ; in need of a triangle
+print("Strat latitude is:" + str(LatA))
+print("Strat longitude is:" + str(LonA))
+print("Dest latitude is:" + str(LatB))
+print("Dest longitude is:" + str(LonB))
+
+
+LatC =90  #Nort pole ; in need of a triangle
 LonC = 0
 sideAB = 0
 sideAC = 0
@@ -37,6 +39,8 @@ sideBC = 0
 turnHor = "none"
 turnVer = "none"
 angle = 0
+angle2 = 0
+angle3 = 0
 r = 6371 # Radius of earth in kilometers. Use 3956 for miles
 
 def hav(x):
@@ -50,7 +54,7 @@ def haversineFormula(lon1, lat1, lon2, lat2):
     # convert decimal degrees to radians 
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
-    # haversine formula 
+     #haversine formula 
     dlon = lon2 - lon1 
     dlat = lat2 - lat1 
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
@@ -59,12 +63,32 @@ def haversineFormula(lon1, lat1, lon2, lat2):
 
 def findAngle():
     global angle
-    sideAB_r = (sideAB/1000)/r
-    sideAC_r = (sideAC/1000)/r
-    sideBC_r = (sideBC/1000)/r
-    angle = (hav(sideBC_r) - hav(sideAB_r - sideAC_r)) / (sin(sideAB_r)*sin(sideAC_r)) #This gives us hav(angle)
-    angle = inhav(angle)
-    angle = angle*(180 / pi)
+    sideAB_r = ((sideAB/1000)/(r*2*pi))*2*pi
+    sideAC_r = ((sideAC/1000)/(2*pi*r))*2*pi
+    sideBC_r = ((sideBC/1000)/(2*pi*r))*2*pi
+    #print(sideAB_r)
+    #print(sideAC_r)
+    #print(sideBC_r)
+    #angle = (hav(sideBC_r) - hav(sideAB_r - sideAC_r)) / (sin(sideAB_r)*sin(sideAC_r)) #This gives us hav(angle)
+    #angle = inhav(angle)
+    #print(angle)
+    #angle = degrees(2.96634)
+    #print(angle)
+    
+    angle2 = (cos(sideBC_r) - (cos(sideAC_r) * cos(sideAB_r))) / (sin(sideAC_r) * sin(sideAB_r))
+    angle2 = acos(angle2)
+    angle2 = degrees(angle2)
+    print(angle2)
+
+    angle = (cos(sideAC_r) - (cos(sideAB_r) * cos(sideBC_r))) / (sin(sideAB_r) * sin(sideBC_r))
+    angle = acos(angle)
+    angle = degrees(angle)
+    print(angle)
+
+    angle3 = (cos(sideAB_r) - (cos(sideAC_r) * cos(sideBC_r))) / (sin(sideAC_r) * sin(sideBC_r))
+    angle3 = acos(angle3)
+    angle3 = degrees(angle3)
+    print(angle3)
 
 def NEQ():
     global turnVer
@@ -98,10 +122,6 @@ def NEQ():
 
 def main():
     NEQ()
-    a = 20
-    a = hav(a)
-    a= inhav(a)
-    print (a)
     if angle == 0:
         findAngle()
     print('Turn '+ str(turnVer) + '&' + str(turnHor) + ' at ' + str(angle) + ' degrees')
